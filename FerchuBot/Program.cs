@@ -40,7 +40,7 @@ namespace FerchuBot
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error during Startup: " + ex.Message);
+                Console.WriteLine("Error during Login: " + ex.Message);
                 throw;
             }
         }
