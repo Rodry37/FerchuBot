@@ -7,5 +7,6 @@ namespace FerchuBot
     public static class BotCommands
     {
         public const string PING = "ping";
+        public const string ROLL = "roll";
     }
 }
