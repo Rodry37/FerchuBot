@@ -10,7 +10,7 @@ namespace FerchuBot
         private static readonly Random _global = new Random();
         [ThreadStatic] private static Random _local;
 
-        public async Task<int> Next(int dicetype)
+        public int Next(int dicetype)
         {
             if (_local == null)
             {
@@ -25,7 +25,7 @@ namespace FerchuBot
             }
 
             int result = _local.Next(dicetype) + 1;
-            return await Task.FromResult(result);
+            return result;
         }
     }
 }

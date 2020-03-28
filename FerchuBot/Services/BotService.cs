@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FerchuBot
+namespace FerchuBot.Services
 {
     public class BotService
     {
@@ -22,9 +22,9 @@ namespace FerchuBot
 
             if (message.Length > 2 && message.StartsWith(COMMAND_CHAR))
             {
-                var command = message.Substring(2).Split(' ').First();
+                string command = GetCommandFromMessage(message);
 
-                switch (command.ToLowerInvariant())
+                switch (command.ToLowerInvariant().Trim())
                 {
                     case BotCommands.PING:
                         await Ping(socketMessage);
@@ -42,14 +42,14 @@ namespace FerchuBot
 
         private async Task RollDice(SocketMessage socketMessage)
         {
-            var roll = socketMessage.Content.Split(' ')[1];
+            var roll = GetParametersFromMessage(socketMessage.Content);
             try
             {
                 var splitDice = roll.Split('d');
                 var numberOfDice = int.Parse(splitDice.First());
 
                 splitDice = splitDice[1].Split(',');
-                DiceType diceType = (DiceType)Enum.Parse(typeof(DiceType), "d"+splitDice[0]);
+                DiceType diceType = (DiceType)Enum.Parse(typeof(DiceType), "d" + splitDice[0]);
                 int modifier = 0;
                 if (splitDice.Length > 1)
                 {
@@ -70,6 +70,25 @@ namespace FerchuBot
         {
             Console.WriteLine("Ping recieved by " + socketMessage.Author.Username + " in channel " + socketMessage.Channel.Name);
             await socketMessage.Channel.SendMessageAsync("Pong!");
+        }
+
+        private string GetCommandFromMessage(string message)
+        {
+            return message.Substring(2).TrimStart().Split(' ').First();
+        }
+
+        private string GetParametersFromMessage(string message)
+        {
+            var strList = message
+                .Substring(2)
+                .TrimStart()
+                .Split(' ')
+                .ToList();
+
+            // Remove command from query
+            strList.RemoveAt(0);
+
+            return string.Join(" ", strList).Trim();
         }
     }
 }

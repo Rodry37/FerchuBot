@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using FerchuBot.Services;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -12,6 +13,7 @@ namespace FerchuBot
         private LogService logger;
         private BotService bot;
         private DiscordSocketClient client;
+        private SecretsService secrets;
 
         public static void Main(string[] args)
             => new Program().MainAsync().GetAwaiter().GetResult();
@@ -22,7 +24,7 @@ namespace FerchuBot
 
             client.Log += logger.Log;
 
-            var token = GetToken();
+            var token = secrets.GetToken();
 
             await Login(token);
 
@@ -50,17 +52,8 @@ namespace FerchuBot
             client = new DiscordSocketClient();
             bot = new BotService();
             logger = new LogService();
+            secrets = new SecretsService();
         }
 
-        private string GetToken()
-        {
-            // Check best way to store token
-            using (StreamReader sr = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + @"\appsecrets.json"))
-            {
-                var json = sr.ReadToEnd();
-                dynamic secrets = JsonConvert.DeserializeObject(json);
-                return secrets.token;
-            };
-        }
     }
 }

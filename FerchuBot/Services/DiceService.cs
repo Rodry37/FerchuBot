@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FerchuBot
+namespace FerchuBot.Services
 {
     public class DiceService
     {
@@ -23,16 +23,17 @@ namespace FerchuBot
             
             for (int i = 0; i < times; i++)
             {
-                amount += await randomGenerator.Next((int)diceType);
+                amount += randomGenerator.Next((int)diceType);
             }
 
-            return amount + modifier;
+            return await Task.FromResult(amount + modifier);
         }
     }
 
     public enum DiceType
     {
         d2 = 2,
+        d4 = 4,
         d6 = 6,
         d8 = 8,
         d10 = 10,
